@@ -54,12 +54,10 @@ resource "aws_instance" "state_ec2" {
     command = "sleep 30; ssh-keyscan ${self.private_ip} >> ~/.ssh/known_hosts"
   }
 
-
   # Add instance info to the Ansible hosts file ( "/etc/ansible/hosts" Ansible Default Inventory Path )
   provisioner "local-exec" {
     command = "echo ${var.state_name} id=${self.id} ansible_host=${self.private_ip} ansible_user=ubuntu us_state=${var.state_name} aws_region=${var.region} aws_s3_bucket=${aws_s3_bucket.state_s3.bucket} aws_dynamodb_table=${aws_dynamodb_table.state_dynamodb.name} >> /etc/ansible/hosts"
   }
-
 
   # Remove instance info from the Ansible hosts file on destroy
   provisioner "local-exec" {
