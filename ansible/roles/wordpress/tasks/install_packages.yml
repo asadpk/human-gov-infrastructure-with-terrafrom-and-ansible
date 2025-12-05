@@ -1,0 +1,29 @@
+---
+- name: Update apt repo
+  apt:
+    update_cache: yes
+
+- name: Install Apache, PHP and required packages
+  apt:
+    name:
+      - apache2
+      - php
+      - php-mysql
+      - php-gd
+      - php-mbstring
+      - php-xml
+      - php-curl
+      - libapache2-mod-php
+      - mysql-client
+      - unzip
+      - tar
+    state: present
+- name: Enable Apache PHP module
+  command: a2enmod php8.3
+  
+- name: Start Apache service
+  service:
+    name: apache2
+    state: started
+    enabled: yes
+

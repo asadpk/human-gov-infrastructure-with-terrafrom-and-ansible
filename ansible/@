@@ -1,0 +1,10 @@
+[all]
+host01 ansible_host=172.31.76.49 ansible_user=ec2-user
+host02 ansible_host=172.31.68.151  ansible_user=ec2-user
+
+# All variable
+ [all:vars]
+ ansible_ssh_private_key_file=tcb-ansible-key.pem
+# web servers groups
+ [webservers]
+ host01

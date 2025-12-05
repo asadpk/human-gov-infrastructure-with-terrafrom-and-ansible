@@ -1,0 +1,36 @@
+---
+- name: Download WordPress
+  get_url:
+    url: "{{ wp_download_url }}"
+    dest: /tmp/wordpress.tar.gz
+
+- name: Extract WordPress
+  unarchive:
+    src: /tmp/wordpress.tar.gz
+    dest: /tmp
+    remote_src: yes
+
+- name: Copy WordPress to web root
+  copy:
+    src: /tmp/wordpress/
+    dest: "{{ wp_install_dir }}/"
+    remote_src: yes
+    owner: www-data
+    group: www-data
+    mode: "0755"
+
+- name: Deploy wp-config.php
+  template:
+    src: wp-config.php.j2
+    dest: "{{ wp_install_dir }}/wp-config.php"
+    owner: www-data
+    group: www-data
+    mode: "0644"
+
+- name: Set ownership for WordPress directory
+  file:
+    path: "{{ wp_install_dir }}"
+    owner: www-data
+    group: www-data
+    recurse: yes
+

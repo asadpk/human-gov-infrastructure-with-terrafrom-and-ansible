@@ -1,0 +1,11 @@
+[all]
+#host01 ansible_host=172.31.66.206   ansible_user=ec2-user
+#host02 ansible_host=172.31.76.83  ansible_user=ec2-user
+host03 ansible_host=172.31.71.11  ansible_user=ubuntu
+# All variable
+ [all:vars]
+ ansible_ssh_private_key_file=humangov-ec2-key.pem
+# web servers groups
+ #[webserver]
+ #host01
+ #host02

@@ -1,0 +1,32 @@
+[Unit]
+Description=Gunicorn instance to serve {{ project_name }}
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory={{ project_path }}
+
+# Ensure environment variables are set
+Environment="PATH={{ project_path }}/humangovenv/bin"
+Environment="US_STATE={{ us_state | default('california') }}"
+Environment="AWS_REGION={{ aws_region | default('us-east-1') }}"
+Environment="AWS_DYNAMODB_TABLE={{ dynamodb_table | default('humangov-california-dynamodb') }}"
+Environment="AWS_BUCKET={{ s3_bucket | default('humangov-california-s3-ugsm') }}"
+
+# Use gunicorn from virtualenv explicitly
+ExecStart={{ project_path }}/humangovenv/bin/gunicorn \
+  --workers 2 \
+  --bind unix:{{ project_path }}/humangov.sock \
+  --access-logfile {{ project_path }}/gunicorn-access.log \
+  --error-logfile {{ project_path }}/gunicorn-error.log \
+  --umask 007 \
+  humangov:app
+
+# Restart automatically if it crashes
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+
